@@ -11,6 +11,15 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       // TODO: implement event handler
     });
 
+    on<SplashScreenInitEvent>((event, emit) async {
+      bool success = await AuthUsecase.authManager.refreshTocken();
+      if (success) {
+        emit(LoggedInState());
+      } else {
+        emit(LoggedOutState());
+      }
+    });
+
     on<LoginPressedEvent>((event, emit) async {
       await AuthUsecase.authManager.login(event.email, event.password);
     });

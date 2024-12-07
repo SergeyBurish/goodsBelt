@@ -1,9 +1,12 @@
 abstract interface class AuthManager {
   Future<void> login(String email, String password);
+  Future<bool> refreshTocken();
 }
 
 abstract interface class AuthRepository {
   Future<void> doLogin(String email, String password);
+  Future<({String? accessToken, String? refreshToken})> getTokens();
+  Future<void> saveTokens ({required String accessToken, required String refreshToken});
 }
 
 class AuthUsecase {
@@ -24,5 +27,14 @@ class _AuthUsecaseImp implements AuthManager {
   @override
   Future<void> login(String email, String password) async {
     repository.doLogin(email, password);
+  }
+  
+  @override
+  Future<bool> refreshTocken() async {
+    final tokens = await repository.getTokens();
+    if(tokens.accessToken == null) {
+      return false;
+    }
+    return true;
   }
 }

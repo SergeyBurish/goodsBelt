@@ -1,27 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:goods_belt/core/navigation/app_router.dart';
 import 'package:goods_belt/features/auth/data/repository/auth_repository.dart';
 import 'package:goods_belt/features/auth/domain/usecase/auth_usecase.dart';
-import 'package:goods_belt/features/auth/presentation/auth_screen.dart';
 
 void main() {
   // dependencies
   AuthUsecase.init(AuthRepositoryImp());
 
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final _appRouter = AppRouter();
+  MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(
       title: 'Flutter Demo',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const AuthScreen(),
+      routerConfig: _appRouter.config(),
     );
   }
 }
