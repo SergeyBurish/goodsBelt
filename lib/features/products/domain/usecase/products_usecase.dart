@@ -1,11 +1,13 @@
 
+import 'package:goods_belt/features/products/domain/entity/product_entity.dart';
+
 abstract interface class ProductsManager {
-  Future<void> getProductsList();
+  Future<List<ProductEntity>> getProductsList();
 }
 
 abstract interface class ProductsRepository {
   Future<({String? accessToken, String? refreshToken})> getTokens();
-  Future<void> getProductsList(String accessToken);
+  Future<List<ProductEntity>> getProductsList(String accessToken);
 }
 
 class ProductsUsecase {
@@ -24,12 +26,12 @@ class _ProductsUsecaseImp implements ProductsManager {
   _ProductsUsecaseImp({required this.repository});
 
   @override
-  Future<void> getProductsList() async {
+  Future<List<ProductEntity>> getProductsList() async {
     final tokens = await repository.getTokens();
     if (tokens.accessToken == null) {
       // TODO: show error
-      return;
+      return [];
     }
-    await repository.getProductsList(tokens.accessToken!);
+    return await repository.getProductsList(tokens.accessToken!);
   }
 } 

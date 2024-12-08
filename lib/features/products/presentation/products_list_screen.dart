@@ -29,10 +29,36 @@ class _ProductsListScreenState extends State<_ProductsListScreen> {
     context.read<ProductsBloc>().add(ProductsListScreenInitEvent());
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(child: Text("ProductsList")),
+    return BlocBuilder<ProductsBloc, ProductsState>(
+      builder: (context, state) {
+        return Scaffold(
+          body: Column(
+            children: [
+              Expanded(
+                child: ListView.builder(
+                  itemCount: state.products.length,
+                  itemBuilder: (context, index) {
+                    final product = state.products.elementAt(index);
+                    return InkWell(
+                      onTap: () => print(index),
+                      child: Row(
+                        children: [
+                          Text(product.title),
+                          Text(product.price.toString()),
+                        ],
+                      ),
+                    );
+                  },
+                )
+              ),
+            ],
+          ),
+        );
+      },
+      buildWhen: (previous, current) => current is ProductsListState,
     );
   }
 }

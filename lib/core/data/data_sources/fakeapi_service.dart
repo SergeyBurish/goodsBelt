@@ -22,7 +22,7 @@ class FakeapiService {
     return response;
   }
 
-  Future<void> getProductsList(String accessToken) async {
+  Future<Response<dynamic>> getProductsList(String accessToken) async {
     print("--------- GET request /products");
     final response = await _dio.get(
       '/products',
@@ -30,5 +30,6 @@ class FakeapiService {
     );
     print("--------- GET response /products");
     print(response);
+    return response;
   }
 }
