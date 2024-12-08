@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:goods_belt/core/data/requests/login_request.dart';
+import 'package:goods_belt/core/data/requests/refresh_tokens_request.dart';
 
 class FakeapiService {
   FakeapiService._();
@@ -18,6 +19,17 @@ class FakeapiService {
       data: request.data(),
     );
     print("--------- POST response /auth/login");
+    print(response);
+    return response;
+  }
+
+  Future<Response<dynamic>> refreshTokens(RefreshTokensRequest request) async {
+    print("--------- POST request /auth/refresh-token");
+    final response = await _dio.post(
+      '/auth/refresh-token',
+      data: request.data(),
+    );
+    print("--------- POST response /auth/refresh-token");
     print(response);
     return response;
   }

@@ -23,6 +23,21 @@ class AuthRepositoryImp implements AuthRepository {
   }
 
   @override
+  Future<TokensEntity?> refreshTokens({required String refreshToken}) async {
+    final tokensDto = await _authDataSource.refreshTokens(refreshToken);
+
+    if(tokensDto != null && 
+    tokensDto.accessToken != null && tokensDto.accessToken!.isNotEmpty &&
+    tokensDto.refreshToken != null && tokensDto.refreshToken!.isNotEmpty
+    ) {
+      return TokensEntity(accessToken: tokensDto.accessToken!, refreshToken: tokensDto.refreshToken!);
+    }
+
+    return null;
+  }
+
+
+  @override
   Future<({String? accessToken, String? refreshToken})> getTokens() async => 
     await LocalDataSource().getTokens();
   

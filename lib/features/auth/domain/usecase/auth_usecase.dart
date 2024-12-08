@@ -7,6 +7,7 @@ abstract interface class AuthManager {
 
 abstract interface class AuthRepository {
   Future<TokensEntity?> doLogin(String email, String password);
+  Future<TokensEntity?> refreshTokens({required String refreshToken});
   Future<({String? accessToken, String? refreshToken})> getTokens();
   Future<void> saveTokens({required String accessToken, required String refreshToken});
 }
@@ -39,9 +40,15 @@ class _AuthUsecaseImp implements AuthManager {
   @override
   Future<bool> refreshTocken() async {
     final tokens = await repository.getTokens();
-    if(tokens.accessToken == null) {
+    if(tokens.accessToken == null || tokens.refreshToken == null) {
       return false;
     }
+
+    final TokensEntity? tokensEntity = await repository.refreshTokens(refreshToken: tokens.refreshToken!);
+    if (tokensEntity == null) {
+      return false;
+    }
+    await repository.saveTokens(accessToken: tokensEntity.accessToken, refreshToken: tokensEntity.refreshToken);
     return true;
   }
 }
