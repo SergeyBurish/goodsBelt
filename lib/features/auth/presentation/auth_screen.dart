@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:goods_belt/core/navigation/app_router.gr.dart';
 import 'package:goods_belt/features/auth/presentation/bloc/auth_bloc.dart';
 
 @RoutePage()
@@ -36,28 +37,38 @@ class _AuthScreenState extends State<_AuthScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("AuthScreen"),
-      ),
-      body: Column(
-        children: [
-          TextField(
-            decoration: const InputDecoration(labelText: "Email"),
-            controller: emailController,
-          ),
-          TextField(
-            decoration: const InputDecoration(labelText: "Password"),
-            controller: passwordController,
-          ),
-          ElevatedButton(
-            onPressed: () {
-              context.read<AuthBloc>().add(LoginPressedEvent(
-                email: emailController.text, password: passwordController.text));
-            }, 
-            child: const Text("Login")
-          )
-        ],
+    return BlocListener<AuthBloc, AuthState>(
+      listener: (context, state) {
+        if (state is LoggedInState) {
+          AutoRouter.of(context).replace(const ProductsListRoute(),);
+        } 
+        // else if (state is LoggedOutState) {
+        //   TODO: show error
+        // }
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text("AuthScreen"),
+        ),
+        body: Column(
+          children: [
+            TextField(
+              decoration: const InputDecoration(labelText: "Email"),
+              controller: emailController,
+            ),
+            TextField(
+              decoration: const InputDecoration(labelText: "Password"),
+              controller: passwordController,
+            ),
+            ElevatedButton(
+              onPressed: () => context.read<AuthBloc>().add(
+                LoginPressedEvent(
+                  email: emailController.text,
+                  password: passwordController.text)),
+              child: const Text("Login")
+            )
+          ],
+        ),
       ),
     );
   }

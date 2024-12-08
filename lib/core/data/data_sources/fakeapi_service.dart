@@ -2,21 +2,33 @@ import 'package:dio/dio.dart';
 import 'package:goods_belt/core/data/requests/login_request.dart';
 
 class FakeapiService {
+  FakeapiService._();
+  static final FakeapiService _instance = FakeapiService._();
+  factory FakeapiService() => _instance;
+
   static const _baseUrl = 'https://api.escuelajs.co/api/v1';
   final Dio _dio = Dio(
     BaseOptions(baseUrl: _baseUrl),
   );
 
-  Future<void> login(LoginRequest request) async {
-    try {
-      final response = await _dio.post(
-        '/auth/login',
-        data: request.data(),
-      );
-      print(response);
+  Future<Response<dynamic>> login(LoginRequest request) async {
+    print("--------- POST request /auth/login");
+    final response = await _dio.post(
+      '/auth/login',
+      data: request.data(),
+    );
+    print("--------- POST response /auth/login");
+    print(response);
+    return response;
+  }
 
-    } on Exception catch (e) {
-      print("eror $e");
-    }
+  Future<void> getProductsList(String accessToken) async {
+    print("--------- GET request /products");
+    final response = await _dio.get(
+      '/products',
+      options: Options( headers: {"Authorization": "Bearer $accessToken",}, )
+    );
+    print("--------- GET response /products");
+    print(response);
   }
 }

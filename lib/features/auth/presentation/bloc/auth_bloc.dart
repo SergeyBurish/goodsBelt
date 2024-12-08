@@ -21,7 +21,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     });
 
     on<LoginPressedEvent>((event, emit) async {
-      await AuthUsecase.authManager.login(event.email, event.password);
+      bool success = await AuthUsecase.authManager.login(event.email, event.password);
+      if (success) {
+        emit(LoggedInState());
+      } else {
+        emit(LoggedOutState());
+      }
     });
   }
 }

@@ -1,12 +1,14 @@
+import 'package:goods_belt/features/auth/domain/entity/tokens_entity.dart';
+
 abstract interface class AuthManager {
-  Future<void> login(String email, String password);
+  Future<bool> login(String email, String password);
   Future<bool> refreshTocken();
 }
 
 abstract interface class AuthRepository {
-  Future<void> doLogin(String email, String password);
+  Future<TokensEntity?> doLogin(String email, String password);
   Future<({String? accessToken, String? refreshToken})> getTokens();
-  Future<void> saveTokens ({required String accessToken, required String refreshToken});
+  Future<void> saveTokens({required String accessToken, required String refreshToken});
 }
 
 class AuthUsecase {
@@ -25,8 +27,13 @@ class _AuthUsecaseImp implements AuthManager {
   _AuthUsecaseImp({required this.repository});
 
   @override
-  Future<void> login(String email, String password) async {
-    repository.doLogin(email, password);
+  Future<bool> login(String email, String password) async {
+    final TokensEntity? tokensEntity = await repository.doLogin(email, password);
+    if (tokensEntity == null) {
+      return false;
+    }
+    await repository.saveTokens(accessToken: tokensEntity.accessToken, refreshToken: tokensEntity.refreshToken);
+    return true;
   }
   
   @override

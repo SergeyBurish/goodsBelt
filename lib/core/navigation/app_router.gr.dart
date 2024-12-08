@@ -12,7 +12,7 @@ import 'package:auto_route/auto_route.dart' as _i4;
 import 'package:goods_belt/features/auth/presentation/auth_screen.dart' as _i1;
 import 'package:goods_belt/features/auth/presentation/splash_screen.dart'
     as _i3;
-import 'package:goods_belt/features/products_list/presentation/products_list_screen.dart'
+import 'package:goods_belt/features/products/presentation/products_list_screen.dart'
     as _i2;
 
 /// generated route for
