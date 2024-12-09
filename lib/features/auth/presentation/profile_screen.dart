@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:goods_belt/core/presentation/widgets/decorator.dart';
 import 'package:goods_belt/features/auth/presentation/bloc/auth_bloc.dart';
 
 @RoutePage()
@@ -36,18 +37,41 @@ class _ProfileScreenState extends State<_ProfileScreen> {
     return BlocBuilder<AuthBloc, AuthState>(
       builder: (context, state) {
         return Scaffold(
+          appBar: AppBar(
+            title: const Text("Профиль"), // L10n
+          ),
           body: state is ProfileState 
-          ? Column(
+          ? Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              CachedNetworkImage(
-                imageUrl: state.profile.avatar,
-                progressIndicatorBuilder: (context, url, downloadProgress) => 
-                  CircularProgressIndicator(value: downloadProgress.progress),
-                errorWidget: (context, url, error) => const Icon(Icons.error),
+              Padding(
+                padding: const EdgeInsets.only(top: 8.0),
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 500, minWidth: 400, maxHeight: 400),
+                  child: Decorator(
+                    child: Column(
+                      children: [
+                        CachedNetworkImage(
+                          imageUrl: state.profile.avatar,
+                          progressIndicatorBuilder: (context, url, downloadProgress) => 
+                            CircularProgressIndicator(value: downloadProgress.progress),
+                          errorWidget: (context, url, error) => const Icon(Icons.error),
+                        ),
+                        const SizedBox(height: 10.0,),
+                        Text(
+                          state.profile.name,
+                          style: Theme.of(context).textTheme.headlineMedium
+                        ),
+                        const SizedBox(height: 10.0,),
+                        Text(
+                          state.profile.email,
+                          style: Theme.of(context).textTheme.headlineSmall
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
               ),
-              Text(state.profile.avatar),
-              Text(state.profile.name),
-              Text(state.profile.email),
             ],
           )
           : const Center(child: CircularProgressIndicator()),
