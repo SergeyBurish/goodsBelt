@@ -10,6 +10,7 @@ class ProductsMapper {
         id: productDto.id!,
         title: productDto.title!, 
         price: productDto.price!,
+        description: productDto.description ?? '',
         images: productDto.images);
     }
 
@@ -27,6 +28,7 @@ class ProductsMapper {
           id: productDto.id!,
           title: productDto.title!, 
           price: productDto.price!,
+          description: '',
           images: productDto.images));
       }
     }
