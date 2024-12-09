@@ -9,7 +9,8 @@ class ProductsMapper {
       return ProductEntity(
         id: productDto.id!,
         title: productDto.title!, 
-        price: productDto.price!);
+        price: productDto.price!,
+        images: productDto.images);
     }
 
     return null;
@@ -20,12 +21,13 @@ class ProductsMapper {
     List<ProductEntity> products = [];
     for (var productDto in productsDto.products) {
       if (productDto.id != null &&
-        productDto.title != null && 
+        productDto.title != null &&
         productDto.price != null) {
         products.add(ProductEntity(
           id: productDto.id!,
           title: productDto.title!, 
-          price: productDto.price!));
+          price: productDto.price!,
+          images: productDto.images));
       }
     }
     return products;

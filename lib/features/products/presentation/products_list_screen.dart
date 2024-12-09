@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:goods_belt/core/navigation/app_router.gr.dart';
@@ -98,14 +99,27 @@ class _ProductsListScreenState extends State<_ProductsListScreen> {
                               itemCount: state.products.length,
                               itemBuilder: (context, index) {
                                 final product = state.products.elementAt(index);
-                                return InkWell(
-                                  onTap: () => context.read<ProductsBloc>()
-                                    .add(ProductPressedEvent(productId: product.id)),
-                                  child: Row(
-                                    children: [
-                                      Text(product.title),
-                                      Text(product.price.toString()),
-                                    ],
+                                return Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: InkWell(
+                                    onTap: () => context.read<ProductsBloc>()
+                                      .add(ProductPressedEvent(productId: product.id)),
+                                    child: Row(
+                                      children: [
+                                        Expanded(child: Text(product.title)),
+                                        Text("  цена ${product.price.toString()}  "), // L10n
+                                        if (product.images.isNotEmpty) 
+                                          CachedNetworkImage(
+                                            width: 50,
+                                            height: 50,
+                                            fit: BoxFit.contain,
+                                            imageUrl: product.images[0],
+                                            progressIndicatorBuilder: (context, url, downloadProgress) => 
+                                              CircularProgressIndicator(value: downloadProgress.progress),
+                                            errorWidget: (context, url, error) => const Icon(Icons.error),
+                                          ),
+                                      ],
+                                    ),
                                   ),
                                 );
                               },
