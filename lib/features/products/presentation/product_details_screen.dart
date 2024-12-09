@@ -5,9 +5,17 @@ import 'package:goods_belt/core/presentation/widgets/decorator.dart';
 import 'package:goods_belt/features/products/domain/entity/product_entity.dart';
 
 @RoutePage()
-class ProductDetailsScreen extends StatelessWidget {
+class ProductDetailsScreen extends StatefulWidget {
   final ProductEntity selectedProduct;
   const ProductDetailsScreen({super.key, required this.selectedProduct});
+
+  @override
+  State<ProductDetailsScreen> createState() => _ProductDetailsScreenState();
+}
+
+class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
+  final PageController _controller = PageController();
+  int _currentPage = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -24,25 +32,54 @@ class ProductDetailsScreen extends StatelessWidget {
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
-                      if (selectedProduct.images.isNotEmpty) 
-                        CachedNetworkImage(
-                          width: 350,
-                          height: 350,
-                          fit: BoxFit.contain,
-                          imageUrl: selectedProduct.images[0],
-                          progressIndicatorBuilder: (context, url, downloadProgress) => 
-                            CircularProgressIndicator(value: downloadProgress.progress),
-                          errorWidget: (context, url, error) => const Icon(Icons.error),
+                      if (widget.selectedProduct.images.isNotEmpty) 
+                        SizedBox(
+                          height: 400,
+                          child: PageView(
+                            controller: _controller,
+                            onPageChanged: (page) {
+                              setState(() {_currentPage = page;});
+                            },
+                            children: widget.selectedProduct.images.map<CachedNetworkImage>((imageUrl) {
+                              return CachedNetworkImage(
+                                width: 350,
+                                height: 350,
+                                fit: BoxFit.contain,
+                                imageUrl: imageUrl,
+                                progressIndicatorBuilder: (context, url, downloadProgress) => 
+                                  Center(child: CircularProgressIndicator(value: downloadProgress.progress)),
+                                errorWidget: (context, url, error) => const Icon(Icons.error),
+                              );
+                            }).toList(),
+                          ),
                         ),
+                      const SizedBox(height: 8),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: List<Widget>.generate(widget.selectedProduct.images.length, (index) {
+                          return AnimatedContainer(
+                            duration: const Duration(milliseconds: 300),
+                            margin: const EdgeInsets.symmetric(horizontal: 5),
+                            height: 8,
+                            width: 8,
+                            decoration: BoxDecoration(
+                              color: _currentPage == index 
+                                ? Theme.of(context).colorScheme.inverseSurface
+                                : Theme.of(context).colorScheme.inverseSurface.withOpacity(0.2),
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                          );
+                        }),
+                      ),
                       const SizedBox(height: 10.0,),
                       Text(
-                        selectedProduct.title,
+                        widget.selectedProduct.title,
                         style: Theme.of(context).textTheme.headlineMedium
                       ),
                       const SizedBox(height: 10.0,),
-                      Text("цена: ${selectedProduct.price}"), // L10n
+                      Text("цена: ${widget.selectedProduct.price}"), // L10n
                       const SizedBox(height: 10.0,),
-                      Text(selectedProduct.description),
+                      Text(widget.selectedProduct.description),
                     ],
                   ),
                 ),
