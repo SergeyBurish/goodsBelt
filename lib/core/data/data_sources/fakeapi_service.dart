@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:goods_belt/core/data/requests/login_request.dart';
+import 'package:goods_belt/core/data/requests/profile_request.dart';
 import 'package:goods_belt/core/data/requests/refresh_tokens_request.dart';
 
 class FakeapiService {
@@ -30,6 +31,17 @@ class FakeapiService {
       data: request.data(),
     );
     print("--------- POST response /auth/refresh-token");
+    print(response);
+    return response;
+  }
+
+  Future<Response<dynamic>> getProfile(ProfileRequest request) async {
+    print("--------- GET request /auth/profile");
+    final response = await _dio.get(
+      '/auth/profile',
+      options: Options( headers: request.headers(), )
+    );
+    print("--------- GET response /auth/profile");
     print(response);
     return response;
   }

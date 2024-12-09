@@ -1,13 +1,16 @@
+import 'package:goods_belt/features/auth/domain/entity/profile_entity.dart';
 import 'package:goods_belt/features/auth/domain/entity/tokens_entity.dart';
 
 abstract interface class AuthManager {
   Future<bool> login(String email, String password);
   Future<bool> refreshTocken();
+  Future<ProfileEntity?> getProfile();
 }
 
 abstract interface class AuthRepository {
   Future<TokensEntity?> doLogin(String email, String password);
   Future<TokensEntity?> refreshTokens({required String refreshToken});
+  Future<ProfileEntity?> getProfile({required String accessToken});
   Future<({String? accessToken, String? refreshToken})> getTokens();
   Future<void> saveTokens({required String accessToken, required String refreshToken});
 }
@@ -50,5 +53,15 @@ class _AuthUsecaseImp implements AuthManager {
     }
     await repository.saveTokens(accessToken: tokensEntity.accessToken, refreshToken: tokensEntity.refreshToken);
     return true;
+  }
+  
+  @override
+  Future<ProfileEntity?> getProfile() async {
+    final tokens = await repository.getTokens();
+    if (tokens.accessToken == null) {
+      // TODO: show error
+      return null;
+    }
+    return await repository.getProfile(accessToken: tokens.accessToken!);
   }
 }

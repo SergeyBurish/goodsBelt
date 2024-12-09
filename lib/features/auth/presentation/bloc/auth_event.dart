@@ -5,6 +5,8 @@ sealed class AuthEvent {}
 
 class SplashScreenInitEvent extends AuthEvent {}
 
+class ProfileScreenInitEvent extends AuthEvent {}
+
 class LoginPressedEvent extends AuthEvent {
   final String email;
   final String password;

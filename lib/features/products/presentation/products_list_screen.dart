@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:goods_belt/core/navigation/app_router.gr.dart';
 import 'package:goods_belt/features/products/presentation/bloc/products_bloc.dart';
 
 @RoutePage()
@@ -35,6 +36,35 @@ class _ProductsListScreenState extends State<_ProductsListScreen> {
     return BlocBuilder<ProductsBloc, ProductsState>(
       builder: (context, state) {
         return Scaffold(
+          appBar: AppBar(
+            title: const Text("Продукты"), // L10n
+            actions: [
+              MenuAnchor(
+                builder: (BuildContext context, MenuController controller, Widget? child) {
+                  return ElevatedButton(
+                    child: const Icon(Icons.settings), 
+                    onPressed: () {
+                      if (controller.isOpen) {
+                        controller.close();
+                      } else {
+                        controller.open();
+                      }
+                    },
+                  );
+                },
+                menuChildren: [
+                  MenuItemButton(
+                    onPressed: () => AutoRouter.of(context).push(const ProfileRoute(),),
+                    child: const Icon(Icons.account_box),
+                  ),
+                  MenuItemButton(
+                    onPressed: () => print("logOut"),
+                    child: const Icon(Icons.logout),
+                  )
+                ],
+              )
+            ],
+          ),
           body: Column(
             children: [
               Expanded(
