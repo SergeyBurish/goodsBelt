@@ -17,4 +17,6 @@ class LocalDataSource {
     String? refreshToken = await _prefs.getString('goodsBeltRefreshToken');
     return (accessToken: accessToken, refreshToken: refreshToken);
   }
+
+  Future<void> resetTokens() async => await _prefs.clear();
 }

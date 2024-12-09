@@ -19,5 +19,8 @@ class ProductsRepositoryImp implements ProductsRepository {
   @override
   Future<({String? accessToken, String? refreshToken})> getTokens() async => 
     await LocalDataSource().getTokens();
-  
+    
+  @override
+  Future<void> resetTokens() async => 
+    await LocalDataSource().resetTokens();
 }

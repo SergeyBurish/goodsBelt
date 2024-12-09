@@ -39,51 +39,61 @@ class _ProductsListScreenState extends State<_ProductsListScreen> {
           appBar: AppBar(
             title: const Text("Продукты"), // L10n
             actions: [
-              MenuAnchor(
-                builder: (BuildContext context, MenuController controller, Widget? child) {
-                  return ElevatedButton(
-                    child: const Icon(Icons.settings), 
-                    onPressed: () {
-                      if (controller.isOpen) {
-                        controller.close();
-                      } else {
-                        controller.open();
-                      }
-                    },
-                  );
+              BlocListener<ProductsBloc, ProductsState>(
+                listener: (context, state) {
+                  if (state is LoggedOutState) {
+                    AutoRouter.of(context).replace(const AuthRoute(),);
+                  }
                 },
-                menuChildren: [
-                  MenuItemButton(
-                    onPressed: () => AutoRouter.of(context).push(const ProfileRoute(),),
-                    child: const Icon(Icons.account_box),
-                  ),
-                  MenuItemButton(
-                    onPressed: () => print("logOut"),
-                    child: const Icon(Icons.logout),
-                  )
-                ],
+                child: MenuAnchor(
+                  builder: (BuildContext context, MenuController controller,
+                      Widget? child) {
+                    return ElevatedButton(
+                      child: const Icon(Icons.settings),
+                      onPressed: () {
+                        if (controller.isOpen) {
+                          controller.close();
+                        } else {
+                          controller.open();
+                        }
+                      },
+                    );
+                  },
+                  menuChildren: [
+                    MenuItemButton(
+                      onPressed: () => AutoRouter.of(context).push(
+                        const ProfileRoute(),
+                      ),
+                      child: const Icon(Icons.account_box),
+                    ),
+                    MenuItemButton(
+                      onPressed: () => context.read<ProductsBloc>()
+                        .add(LogoutPressedEvent()),
+                      child: const Icon(Icons.logout),
+                    )
+                  ],
+                ),
               )
             ],
           ),
           body: Column(
             children: [
               Expanded(
-                child: ListView.builder(
-                  itemCount: state.products.length,
-                  itemBuilder: (context, index) {
-                    final product = state.products.elementAt(index);
-                    return InkWell(
-                      onTap: () => print(index),
-                      child: Row(
-                        children: [
-                          Text(product.title),
-                          Text(product.price.toString()),
-                        ],
-                      ),
-                    );
-                  },
-                )
-              ),
+                  child: ListView.builder(
+                itemCount: state.products.length,
+                itemBuilder: (context, index) {
+                  final product = state.products.elementAt(index);
+                  return InkWell(
+                    onTap: () => print(index),
+                    child: Row(
+                      children: [
+                        Text(product.title),
+                        Text(product.price.toString()),
+                      ],
+                    ),
+                  );
+                },
+              )),
             ],
           ),
         );

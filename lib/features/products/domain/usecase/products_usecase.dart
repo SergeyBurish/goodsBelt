@@ -3,10 +3,12 @@ import 'package:goods_belt/features/products/domain/entity/product_entity.dart';
 
 abstract interface class ProductsManager {
   Future<List<ProductEntity>> getProductsList();
+  Future<void> logout();
 }
 
 abstract interface class ProductsRepository {
   Future<({String? accessToken, String? refreshToken})> getTokens();
+  Future<void> resetTokens();
   Future<List<ProductEntity>> getProductsList(String accessToken);
 }
 
@@ -34,4 +36,7 @@ class _ProductsUsecaseImp implements ProductsManager {
     }
     return await repository.getProductsList(tokens.accessToken!);
   }
+  
+  @override
+  Future<void> logout() async => await repository.resetTokens();
 } 

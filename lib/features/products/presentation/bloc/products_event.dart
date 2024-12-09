@@ -4,3 +4,4 @@ part of 'products_bloc.dart';
 sealed class ProductsEvent {}
 
 class ProductsListScreenInitEvent extends ProductsEvent{}
+class LogoutPressedEvent extends ProductsEvent{}

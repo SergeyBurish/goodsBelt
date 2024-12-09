@@ -17,5 +17,10 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
       final products = await ProductsUsecase.productsManager.getProductsList();
       emit(ProductsListState(products: products));
     });
+
+    on<LogoutPressedEvent>((event, emit) async {
+      await ProductsUsecase.productsManager.logout();
+      emit(LoggedOutState());
+    });
   }
 }

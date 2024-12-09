@@ -15,3 +15,5 @@ final class ProductsListState extends ProductsState {
   @override
   List<ProductEntity> get products => _products;
 }
+
+final class LoggedOutState extends ProductsState {}
