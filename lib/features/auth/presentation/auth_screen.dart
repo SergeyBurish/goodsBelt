@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:goods_belt/core/navigation/app_router.gr.dart';
+import 'package:goods_belt/core/presentation/widgets/decorator.dart';
 import 'package:goods_belt/features/auth/presentation/bloc/auth_bloc.dart';
 
 @RoutePage()
@@ -48,25 +49,41 @@ class _AuthScreenState extends State<_AuthScreen> {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: const Text("AuthScreen"),
+          title: const Text("Вход в личный кабинет"), // L10n
         ),
-        body: Column(
+        body: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            TextField(
-              decoration: const InputDecoration(labelText: "Email"),
-              controller: emailController,
+            Padding(
+              padding: const EdgeInsets.only(top: 8.0),
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 500, maxHeight: 300),
+                child: Decorator(
+                  child: Column(
+                    children: [
+                      TextField(
+                        decoration: const InputDecoration(labelText: "Email"),
+                        controller: emailController,
+                      ),
+                      const SizedBox(height: 10.0,),
+                      TextField(
+                        obscureText: true,
+                        decoration: const InputDecoration(labelText: "Password"),
+                        controller: passwordController,
+                      ),
+                      const SizedBox(height: 10.0,),
+                      ElevatedButton(
+                        onPressed: () => context.read<AuthBloc>().add(
+                          LoginPressedEvent(
+                            email: emailController.text,
+                            password: passwordController.text)),
+                        child: const Text("Войти") // L10n
+                      )
+                    ],
+                  ),
+                ),
+              ),
             ),
-            TextField(
-              decoration: const InputDecoration(labelText: "Password"),
-              controller: passwordController,
-            ),
-            ElevatedButton(
-              onPressed: () => context.read<AuthBloc>().add(
-                LoginPressedEvent(
-                  email: emailController.text,
-                  password: passwordController.text)),
-              child: const Text("Login")
-            )
           ],
         ),
       ),

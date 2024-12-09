@@ -42,7 +42,7 @@ class _SplashScreenState extends State<_SplashScreen> {
         }
       },
       child: const Scaffold(
-        body: Center(child: Text("SplashScreen")),
+        body: Center(child: CircularProgressIndicator()),
       ),
     );
   }

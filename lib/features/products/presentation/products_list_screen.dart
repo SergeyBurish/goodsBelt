@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:goods_belt/core/navigation/app_router.gr.dart';
+import 'package:goods_belt/core/presentation/widgets/decorator.dart';
 import 'package:goods_belt/features/products/presentation/bloc/products_bloc.dart';
 
 @RoutePage()
@@ -82,25 +83,39 @@ class _ProductsListScreenState extends State<_ProductsListScreen> {
                 AutoRouter.of(context).push(ProductDetailsRoute(selectedProduct: state.selectedProduct));
               }
             },
-            child: Column(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Expanded(
-                    child: ListView.builder(
-                  itemCount: state.products.length,
-                  itemBuilder: (context, index) {
-                    final product = state.products.elementAt(index);
-                    return InkWell(
-                      onTap: () => context.read<ProductsBloc>()
-                        .add(ProductPressedEvent(productId: product.id)),
-                      child: Row(
-                        children: [
-                          Text(product.title),
-                          Text(product.price.toString()),
-                        ],
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10.0),
+                  child: Column(
+                    children: [
+                      Expanded(
+                        child: ConstrainedBox(
+                          constraints: const BoxConstraints(maxWidth: 500),
+                          child: Decorator(
+                            child: ListView.builder(
+                              itemCount: state.products.length,
+                              itemBuilder: (context, index) {
+                                final product = state.products.elementAt(index);
+                                return InkWell(
+                                  onTap: () => context.read<ProductsBloc>()
+                                    .add(ProductPressedEvent(productId: product.id)),
+                                  child: Row(
+                                    children: [
+                                      Text(product.title),
+                                      Text(product.price.toString()),
+                                    ],
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                        )
                       ),
-                    );
-                  },
-                )),
+                    ],
+                  ),
+                ),
               ],
             ),
           ),
