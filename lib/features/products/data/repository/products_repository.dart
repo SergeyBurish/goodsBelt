@@ -11,9 +11,19 @@ class ProductsRepositoryImp implements ProductsRepository {
   Future<List<ProductEntity>> getProductsList(String accessToken) async {
     final productsDto = await _productsDataSource.getProductsList(accessToken);
     if (productsDto != null) {
-      return ProductsMapper.fromDto(productsDto);
+      return ProductsMapper.fromProductsListDto(productsDto);
     }
     return [];
+  }
+
+  @override
+  Future<ProductEntity?> getProduct(int productId) async {
+    final product = await _productsDataSource.getProduct(productId);
+    if (product != null) {
+      return ProductsMapper.fromProductDto(product);
+    }
+
+    return null;
   }
 
   @override

@@ -18,6 +18,17 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
       emit(ProductsListState(products: products));
     });
 
+    on<ProductPressedEvent>((event, emit) async {
+      final ProductEntity? product = await ProductsUsecase.productsManager.getProduct(event.productId);
+
+      if (product != null) {
+        emit(ProductSelectedState(selectedProduct: product));
+      } 
+      // else {
+      //   TODO: show error
+      // }
+    });
+
     on<LogoutPressedEvent>((event, emit) async {
       await ProductsUsecase.productsManager.logout();
       emit(LoggedOutState());

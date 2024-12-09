@@ -56,4 +56,14 @@ class FakeapiService {
     print(response);
     return response;
   }
+
+  Future<Response<dynamic>> getProduct(int productId) async {
+    print("--------- GET request /products/$productId");
+    final response = await _dio.get(
+      '/products/$productId',
+    );
+    print("--------- GET response /products/$productId");
+    print(response);
+    return response;
+  }
 }

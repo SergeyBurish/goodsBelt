@@ -76,25 +76,33 @@ class _ProductsListScreenState extends State<_ProductsListScreen> {
               )
             ],
           ),
-          body: Column(
-            children: [
-              Expanded(
-                  child: ListView.builder(
-                itemCount: state.products.length,
-                itemBuilder: (context, index) {
-                  final product = state.products.elementAt(index);
-                  return InkWell(
-                    onTap: () => print(index),
-                    child: Row(
-                      children: [
-                        Text(product.title),
-                        Text(product.price.toString()),
-                      ],
-                    ),
-                  );
-                },
-              )),
-            ],
+          body: BlocListener<ProductsBloc, ProductsState>(
+            listener: (context, state) {
+              if (state is ProductSelectedState) {
+                AutoRouter.of(context).push(ProductDetailsRoute(selectedProduct: state.selectedProduct));
+              }
+            },
+            child: Column(
+              children: [
+                Expanded(
+                    child: ListView.builder(
+                  itemCount: state.products.length,
+                  itemBuilder: (context, index) {
+                    final product = state.products.elementAt(index);
+                    return InkWell(
+                      onTap: () => context.read<ProductsBloc>()
+                        .add(ProductPressedEvent(productId: product.id)),
+                      child: Row(
+                        children: [
+                          Text(product.title),
+                          Text(product.price.toString()),
+                        ],
+                      ),
+                    );
+                  },
+                )),
+              ],
+            ),
           ),
         );
       },

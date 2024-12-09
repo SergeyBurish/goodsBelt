@@ -13,4 +13,14 @@ class ProductsDataSource {
       return null;
     }
   }
+
+  Future<ProductDto?> getProduct(int productId) async {
+    try {
+      final response = await _fakeapiService.getProduct(productId);
+      return ProductDto.fromApi(response.data);
+    } on Exception catch (e) {
+      print("error $e");
+      return null;
+    }
+  }
 }

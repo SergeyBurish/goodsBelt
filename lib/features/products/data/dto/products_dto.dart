@@ -1,10 +1,12 @@
 class ProductDto {
+  final int? id;
   final String? title;
   final double? price;
   final String? description;
 
   ProductDto.fromApi(dynamic record) 
-    : title =       record['title'],
+    : id =          record['id'],
+      title =       record['title'],
       price =       record['price'],
       description = record['description'];
 }

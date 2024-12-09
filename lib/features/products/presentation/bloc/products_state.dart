@@ -2,6 +2,7 @@ part of 'products_bloc.dart';
 
 @immutable
 sealed class ProductsState {
+  ProductEntity get selectedProduct => ProductEntity.empty();
   List<ProductEntity> get products => [];
 }
 
@@ -14,6 +15,15 @@ final class ProductsListState extends ProductsState {
 
   @override
   List<ProductEntity> get products => _products;
+}
+
+final class ProductSelectedState extends ProductsState {
+  final ProductEntity _selectedProduct;
+
+  ProductSelectedState({required ProductEntity selectedProduct}) : _selectedProduct = selectedProduct;
+
+  @override
+  ProductEntity get selectedProduct => _selectedProduct;
 }
 
 final class LoggedOutState extends ProductsState {}
